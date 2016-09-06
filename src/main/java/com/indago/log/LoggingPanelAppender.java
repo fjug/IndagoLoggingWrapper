@@ -41,9 +41,6 @@ public class LoggingPanelAppender extends AppenderSkeleton {
 		}
 
 		if ( console != null ) {
-			// This hack is needed to filter all the DEBUG level output coming from org.scijava.log.slf4j.SLF4JLogService:67 -- TODO needs to change on their end!
-			if ( event.getLocationInformation().getClassName().equals( "org.scijava.log.slf4j.SLF4JLogService" ) ) { return; }
-
 			String messageHeader = "" + event.getTimeStamp() + " - " + event.getLocationInformation().getClassName() + " - " + event
 					.getLocationInformation()
 					.getLineNumber() + " - ";
