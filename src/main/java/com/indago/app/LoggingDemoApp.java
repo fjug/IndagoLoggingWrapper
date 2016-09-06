@@ -33,7 +33,7 @@ import net.imagej.ops.OpService;
  *
  * @author jug
  */
-public class LoggingTutorialApp implements ActionListener {
+public class LoggingDemoApp implements ActionListener {
 
 	/**
 	 * true, iff this app is not started by the imagej2/fiji plugin (tr2d_)
@@ -46,11 +46,11 @@ public class LoggingTutorialApp implements ActionListener {
 
 	public static OpService ops = null;
 
-	public LoggingTutorialApp() {
+	public LoggingDemoApp() {
 		btnSysoutTest.addActionListener( this );
 		btnLogTest.addActionListener( this );
 
-		guiFrame = new JFrame( "Logging Tutorial" );
+		guiFrame = new JFrame( "Logging Demo App" );
 		guiFrame.getContentPane().add( new JScrollPane( new LoggingPanel() ), BorderLayout.CENTER );
 		guiFrame.getContentPane().add( btnSysoutTest, BorderLayout.NORTH );
 		guiFrame.getContentPane().add( btnLogTest, BorderLayout.SOUTH );
@@ -91,7 +91,7 @@ public class LoggingTutorialApp implements ActionListener {
 			Log.info( "PLUGIN" );
 		}
 
-		new LoggingTutorialApp();
+		new LoggingDemoApp();
 	}
 
 	private static void setFrameSizeAndCloseOperation() {
@@ -113,7 +113,7 @@ public class LoggingTutorialApp implements ActionListener {
 						options,
 						options[ 0 ] );
 				if ( choice == 0 ) {
-					LoggingTutorialApp.quit( 0 );
+					LoggingDemoApp.quit( 0 );
 				}
 			}
 		} );

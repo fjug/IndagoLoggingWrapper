@@ -4,7 +4,7 @@ import org.scijava.log.slf4j.SLF4JLogService;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
-import com.indago.app.LoggingTutorialApp;
+import com.indago.app.LoggingDemoApp;
 
 import net.imagej.ops.OpService;
 
@@ -14,8 +14,8 @@ import net.imagej.ops.OpService;
  * @author Florian Jug
  */
 
-@Plugin( type = ContextCommand.class, headless = false, menuPath = "Plugins>LoggingTutorial" )
-public class LoggingTutorialPlugin implements Command {
+@Plugin( type = ContextCommand.class, headless = false )
+public class LoggingDemoPlugin implements Command {
 
 	@Parameter
 	private OpService opService;
@@ -28,8 +28,8 @@ public class LoggingTutorialPlugin implements Command {
 	 */
 	@Override
 	public void run() {
-		LoggingTutorialApp.isStandalone = false;
-		LoggingTutorialApp.ops = opService;
-		LoggingTutorialApp.main( null );
+		LoggingDemoApp.isStandalone = false;
+		LoggingDemoApp.ops = opService;
+		LoggingDemoApp.main( null );
 	}
 }
