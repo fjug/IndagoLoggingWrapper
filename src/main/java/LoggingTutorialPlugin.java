@@ -1,0 +1,35 @@
+import org.scijava.command.Command;
+import org.scijava.command.ContextCommand;
+import org.scijava.log.slf4j.SLF4JLogService;
+import org.scijava.plugin.Parameter;
+import org.scijava.plugin.Plugin;
+
+import com.indago.app.LoggingTutorialApp;
+
+import net.imagej.ops.OpService;
+
+/**
+ * Tr2d Plugin for Fiji/ImageJ2
+ *
+ * @author Florian Jug
+ */
+
+@Plugin( type = ContextCommand.class, headless = false, menuPath = "Plugins>LoggingTutorial" )
+public class LoggingTutorialPlugin implements Command {
+
+	@Parameter
+	private OpService opService;
+
+	@Parameter
+	private SLF4JLogService logService;
+
+	/**
+	 * @see java.lang.Runnable#run()
+	 */
+	@Override
+	public void run() {
+		LoggingTutorialApp.isStandalone = false;
+		LoggingTutorialApp.ops = opService;
+		LoggingTutorialApp.main( null );
+	}
+}
