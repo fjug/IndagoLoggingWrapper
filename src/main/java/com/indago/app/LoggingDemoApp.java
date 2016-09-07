@@ -51,7 +51,7 @@ public class LoggingDemoApp implements ActionListener {
 		btnLogTest.addActionListener( this );
 
 		guiFrame = new JFrame( "Logging Demo App" );
-		guiFrame.getContentPane().add( new JScrollPane( new LoggingPanel() ), BorderLayout.CENTER );
+		guiFrame.getContentPane().add( new JScrollPane( LoggingPanel.getInstance() ), BorderLayout.CENTER );
 		guiFrame.getContentPane().add( btnSysoutTest, BorderLayout.NORTH );
 		guiFrame.getContentPane().add( btnLogTest, BorderLayout.SOUTH );
 		setFrameSizeAndCloseOperation();
@@ -63,12 +63,12 @@ public class LoggingDemoApp implements ActionListener {
 		Log.warn( "started" );
 		Log.error( "started" );
 
-		System.err.println( "stderr before redirecting" );
-		System.out.println( "stdout before redirecting" );
-		Log.redirectStderr();
-		Log.redirectStdout();
-		System.err.println( "stderr after redirecting" );
-		System.out.println( "stdout after redirecting" );
+		System.err.println( "stderr without redirecting" );
+		System.out.println( "stdout without redirecting" );
+//		Log.redirectStderr();
+//		Log.redirectStdout();
+//		System.err.println( "stderr after redirecting" );
+//		System.out.println( "stdout after redirecting" );
 	}
 
 	public static void main( final String[] args ) {

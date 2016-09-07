@@ -7,6 +7,7 @@ import java.io.PrintStream;
 
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
+import javax.swing.SwingUtilities;
 
 public class LoggingPanel extends JPanel {
 
@@ -40,15 +41,15 @@ public class LoggingPanel extends JPanel {
 
 		cosHeader = new ConsoleOutputStream( Color.GRAY, logText, false );
 		headerStream = new PrintStream( cosHeader, true );
-		cosTrace = new ConsoleOutputStream( Color.GRAY, logText );
+		cosTrace = new ConsoleOutputStream( Color.GRAY, logText, false );
 		traceStream = new PrintStream( cosTrace, true );
-		cosDebug = new ConsoleOutputStream( Color.GREEN, logText );
+		cosDebug = new ConsoleOutputStream( Color.GREEN, logText, false );
 		debugStream = new PrintStream( cosDebug, true );
-		cosInfo = new ConsoleOutputStream( Color.BLACK, logText );
+		cosInfo = new ConsoleOutputStream( Color.BLACK, logText, false );
 		infoStream = new PrintStream( cosInfo, true );
-		cosWarn = new ConsoleOutputStream( Color.ORANGE, logText );
+		cosWarn = new ConsoleOutputStream( Color.ORANGE, logText, false );
 		warnStream = new PrintStream( cosWarn, true );
-		cosError = new ConsoleOutputStream( Color.RED, logText );
+		cosError = new ConsoleOutputStream( Color.RED, logText, false );
 		errorStream = new PrintStream( cosError, true );
 
 		// Optional streams, activated by methods redirectStd[out|err].
@@ -57,31 +58,48 @@ public class LoggingPanel extends JPanel {
 	}
 
 	public static LoggingPanel getInstance() {
+		if ( instance == null ) {
+			instance = new LoggingPanel();
+		}
 		return instance;
 	}
 
+	private void printInSwingThread( final PrintStream stream, final String message ) {
+		if ( !SwingUtilities.isEventDispatchThread() ) {
+			stream.print( message );
+		} else {
+			SwingUtilities.invokeLater( new Runnable() {
+
+				@Override
+				public void run() {
+					stream.print( message );
+				}
+			} );
+		}
+	}
+
 	public void header( final String header ) {
-		headerStream.print( header );
+		printInSwingThread( headerStream, header );
 	}
 
 	public void debug( final String message ) {
-		debugStream.print( message );
+		printInSwingThread( debugStream, message );
 	}
 
 	public void error( final String message ) {
-		errorStream.print( message );
+		printInSwingThread( errorStream, message );
 	}
 
 	public void info( final String message ) {
-		infoStream.print( message );
+		printInSwingThread( infoStream, message );
 	}
 
 	public void trace( final String message ) {
-		traceStream.print( message );
+		printInSwingThread( traceStream, message );
 	}
 
 	public void warn( final String message ) {
-		warnStream.print( message );
+		printInSwingThread( warnStream, message );
 	}
 
 	public void redirectStderr() {

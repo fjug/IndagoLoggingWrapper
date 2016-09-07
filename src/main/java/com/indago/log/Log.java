@@ -23,7 +23,7 @@ public class Log {
 		if ( logs instanceof SLF4JLogService ) {
 			logService = ( SLF4JLogService ) logs;
 			logger = logService.getLogger();
-			if ( logger instanceof LocationAwareLogger ) {
+			if ( logger instanceof LocationAwareLogger ) { // with log4j backend this works
 				locationAwareLogger = ( LocationAwareLogger ) logger;
 			} else {
 				logger.warn( "SLF4JLogService does not provide a slf4j LocationAwareLogger" );

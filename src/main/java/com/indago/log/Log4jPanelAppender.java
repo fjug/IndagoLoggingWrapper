@@ -5,14 +5,14 @@ import org.apache.log4j.Level;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.spi.LoggingEvent;
 
-public class LoggingPanelAppender extends AppenderSkeleton {
+public class Log4jPanelAppender extends AppenderSkeleton {
 
 	private LoggingPanel console = null;
 
 	/**
 	 *
 	 */
-	public LoggingPanelAppender() {
+	public Log4jPanelAppender() {
 		this.setLayout( new PatternLayout( "%d{HH:mm:ss} %-6p %-4L: %-25C{1} " ) );
 	}
 
