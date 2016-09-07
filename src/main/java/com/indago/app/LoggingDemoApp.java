@@ -18,6 +18,8 @@ import javax.swing.WindowConstants;
 import org.scijava.Context;
 import org.scijava.io.IOService;
 import org.scijava.log.LogService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.indago.log.LoggingPanel;
 
@@ -49,21 +51,28 @@ public class LoggingDemoApp implements ActionListener {
 	public static OpService ops = null;
 	private static LogService log;
 
-	public LoggingDemoApp() {
-		btnSysoutTest.addActionListener( this );
-		btnLogTest.addActionListener( this );
-		btnSysoutTestApp.addActionListener( this );
-		btnLogTestApp.addActionListener( this );
+	private static Logger applog;
 
-		frameMainLogger = new JFrame( "Main Logging Window" );
-		frameMainLogger.getContentPane().add( new JScrollPane( LoggingPanel.getInstance() ), BorderLayout.CENTER );
+	public LoggingDemoApp() {
+		frameMainLogger = new JFrame( "Main Logging Window -- get's it all, thresholds at INFO" );
+		final LoggingPanel mainLogPanel = new LoggingPanel();
+		mainLogPanel.registerToReceiveFrom( "INFO" );
+		frameMainLogger.getContentPane().add( new JScrollPane( mainLogPanel ), BorderLayout.CENTER );
 		frameMainLogger.getContentPane().add( btnSysoutTest, BorderLayout.NORTH );
 		frameMainLogger.getContentPane().add( btnLogTest, BorderLayout.SOUTH );
 
-		frameAppLogger = new JFrame( "App Logging Window" );
-		frameAppLogger.getContentPane().add( new JScrollPane( LoggingPanel.getInstance() ), BorderLayout.CENTER );
+		btnSysoutTest.addActionListener( this );
+		btnLogTest.addActionListener( this );
+
+		frameAppLogger = new JFrame( "App Logging Window -- gets only from app specific logger" );
+		final LoggingPanel appPanel = new LoggingPanel();
+		appPanel.registerToReceiveFrom( "TRACE", applog );
+		frameAppLogger.getContentPane().add( new JScrollPane( appPanel ), BorderLayout.CENTER );
 		frameAppLogger.getContentPane().add( btnSysoutTestApp, BorderLayout.NORTH );
 		frameAppLogger.getContentPane().add( btnLogTestApp, BorderLayout.SOUTH );
+
+		btnSysoutTestApp.addActionListener( this );
+		btnLogTestApp.addActionListener( this );
 
 		setFrameSizesAndCloseOperations();
 		frameMainLogger.setVisible( true );
@@ -77,10 +86,6 @@ public class LoggingDemoApp implements ActionListener {
 
 		System.err.println( "stderr without redirecting" );
 		System.out.println( "stdout without redirecting" );
-//		Log.redirectStderr();
-//		Log.redirectStdout();
-//		System.err.println( "stderr after redirecting" );
-//		System.out.println( "stdout after redirecting" );
 	}
 
 	public static void main( final String[] args ) {
@@ -96,11 +101,23 @@ public class LoggingDemoApp implements ActionListener {
 					IOService.class, LogService.class );
 			ops = context.getService( OpService.class );
 
+			// GET THE GLOBAL LOGGER
+			// ---------------------
 			log = context.getService( LogService.class );
 			log.info( "STANDALONE" );
+
+			// GET THE APP SPECIFIC LOGGER
+			// ---------------------------
+			applog = LoggerFactory.getLogger( "app" );
 		} else {
+			// GET THE GLOBAL LOGGER
+			// ---------------------
 			log = ops.getContext().getService( LogService.class );
 			log.info( "PLUGIN" );
+
+			// GET THE APP SPECIFIC LOGGER
+			// ---------------------------
+			applog = LoggerFactory.getLogger( "app" );
 		}
 
 		new LoggingDemoApp();
@@ -169,11 +186,11 @@ public class LoggingDemoApp implements ActionListener {
 			System.err.println( "strerr output of the app" );
 			System.out.println( "stdout output of the app" );
 		} else if ( e.getSource().equals( btnLogTestApp ) ) {
-			log.trace( "test lof of the app" );
-			log.debug( "test lof of the app" );
-			log.info( "test lof of the app" );
-			log.warn( "test lof of the app" );
-			log.error( "test lof of the app" );
+			applog.trace( "test lof of the app" );
+			applog.debug( "test lof of the app" );
+			applog.info( "test lof of the app" );
+			applog.warn( "test lof of the app" );
+			applog.error( "test lof of the app" );
 		}
 	}
 }

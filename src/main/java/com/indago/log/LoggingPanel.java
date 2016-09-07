@@ -4,16 +4,22 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
 import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JPanel;
 import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
 
+import org.slf4j.Logger;
+
 public class LoggingPanel extends JPanel {
 
-	private static LoggingPanel instance = null;
+	private static LoggingHub logHub;
 
 	private final JTextPane logText;
+
+	private static String defaultAppenderName = "INFO";
 
 	private final ConsoleOutputStream cosHeader;
 	private final ConsoleOutputStream cosTrace;
@@ -31,9 +37,11 @@ public class LoggingPanel extends JPanel {
 	private final ConsoleOutputStream cosStdout;
 	private final ConsoleOutputStream cosStderr;
 
+	/**
+	 * Sets up a <code>LoggingPanel</code> that only receives from the default
+	 * Appender (INFO)
+	 */
 	public LoggingPanel() {
-		instance = this;
-
 		this.setLayout( new BorderLayout() );
 		logText = new JTextPane();
 		logText.setFont( new Font( "monospaced", Font.PLAIN, 12 ) );
@@ -57,11 +65,34 @@ public class LoggingPanel extends JPanel {
 		cosStderr = new ConsoleOutputStream( Color.RED, logText, new PrintStream( System.err ), false );
 	}
 
-	public static LoggingPanel getInstance() {
-		if ( instance == null ) {
-			instance = new LoggingPanel();
+	/**
+	 * @param acceptedAppenderName
+	 */
+	public void registerToReceiveFrom( final String acceptedAppenderName ) {
+		registerToReceiveFrom( acceptedAppenderName, null );
+	}
+
+	/**
+	 * @param acceptedAppenderName
+	 * @param acceptedLoggers
+	 */
+	public void registerToReceiveFrom( final String acceptedAppenderName, final Logger... acceptedLoggers ) {
+		if ( acceptedLoggers != null ) {
+			final List< String > acceptedLoggerNames = new ArrayList<>();
+			for ( final Logger logger : acceptedLoggers ) {
+				acceptedLoggerNames.add( logger.getName() );
+			}
+			getLoggingHub().registerLogPanel( this, acceptedAppenderName, acceptedLoggerNames );
+		} else {
+			getLoggingHub().registerLogPanel( this, acceptedAppenderName, null );
 		}
-		return instance;
+	}
+
+	public static LoggingHub getLoggingHub() {
+		if ( logHub == null ) {
+			logHub = new LoggingHub();
+		}
+		return logHub;
 	}
 
 	private void printInSwingThread( final PrintStream stream, final String message ) {

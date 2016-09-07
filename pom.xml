@@ -26,15 +26,15 @@
   			<groupId>org.scijava</groupId>
   			<artifactId>scijava-log-slf4j</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-		</dependency>
- 		<!-- <dependency>
+<!--  		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>1.7.2</version>
 		</dependency> -->
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>net.imagej</groupId>

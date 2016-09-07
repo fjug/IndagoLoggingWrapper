@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.concurrent.locks.ReentrantLock;
 
-import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Layout;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
@@ -36,9 +35,9 @@ public class LogbackPanelAppender< E > extends UnsynchronizedAppenderBase< E > {
 	private final StringOutputStream sosEncodedMessage;
 
 	/**
-	 * This is the {@link LoggingPanel logPanel} this appender writes to.
+	 * This is the {@link LoggingHub logHub} this appender writes to.
 	 */
-	private LoggingPanel logPanel;
+	private LoggingHub logHub;
 
 	/**
 	 * CONSTRUCTION
@@ -58,8 +57,8 @@ public class LogbackPanelAppender< E > extends UnsynchronizedAppenderBase< E > {
 	/**
 	 * @return the logging panel this appender writes to.
 	 */
-	public LoggingPanel getLogPanel() {
-		return logPanel;
+	public LoggingHub getLogHub() {
+		return logHub;
 	}
 
 	/**
@@ -68,20 +67,14 @@ public class LogbackPanelAppender< E > extends UnsynchronizedAppenderBase< E > {
 	 */
 	@Override
 	public void start() {
-		int errors = 0;
 		if ( this.encoder == null ) {
 			addStatus( new ErrorStatus( "No encoder set for the appender named \"" + name + "\".", this ) );
-			errors++;
-		}
+		} else {
 
-		if ( this.logPanel == null ) {
-			//TODO: support for multiple LoggingPanel instances absolutely needed!!!!
-			this.logPanel = LoggingPanel.getInstance();
-//			addStatus( new ErrorStatus( "No LoggingPanel set for the appender named \"" + name + "\".", this ) );
-//			errors++;
-		}
-		// only error free appenders should be activated
-		if ( errors == 0 ) {
+			if ( this.logHub == null ) {
+				this.logHub = LoggingPanel.getLoggingHub();
+			}
+
 			super.start();
 		}
 	}
@@ -132,8 +125,8 @@ public class LogbackPanelAppender< E > extends UnsynchronizedAppenderBase< E > {
 	 * @param logPanel
 	 *            The LoggingPanel to use.
 	 */
-	public void setLoggingPanel( final LoggingPanel logPanel ) {
-		this.logPanel = logPanel;
+	public void setLogHub( final LoggingHub logHub ) {
+		this.logHub = logHub;
 		if ( encoder == null ) {
 			addWarn( "Encoder has not been set. Cannot invoke its init method." );
 			return;
@@ -166,24 +159,9 @@ public class LogbackPanelAppender< E > extends UnsynchronizedAppenderBase< E > {
 			try {
 				writeOut( event );
 				if ( event instanceof ILoggingEvent ) {
-					final ILoggingEvent ile = ( ILoggingEvent ) event;
-					switch ( ile.getLevel().levelInt ) {
-					case Level.TRACE_INT:
-						logPanel.trace( sosEncodedMessage.toString() );
-						break;
-					case Level.DEBUG_INT:
-						logPanel.debug( sosEncodedMessage.toString() );
-						break;
-					case Level.INFO_INT:
-						logPanel.info( sosEncodedMessage.toString() );
-						break;
-					case Level.WARN_INT:
-						logPanel.warn( sosEncodedMessage.toString() );
-						break;
-					case Level.ERROR_INT:
-						logPanel.error( sosEncodedMessage.toString() );
-						break;
-					}
+					logHub.receive( name, ( ILoggingEvent ) event, sosEncodedMessage.toString() );
+				} else {
+					addStatus( new ErrorStatus( "Received event is not an ILoggingEvent", this ) );
 				}
 				sosEncodedMessage.reset();
 			}

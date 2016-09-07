@@ -1,13 +1,12 @@
 package com.indago.log;
 
 import org.apache.log4j.AppenderSkeleton;
-import org.apache.log4j.Level;
 import org.apache.log4j.PatternLayout;
 import org.apache.log4j.spi.LoggingEvent;
 
 public class Log4jPanelAppender extends AppenderSkeleton {
 
-	private LoggingPanel console = null;
+	private LoggingHub logHub = null;
 
 	/**
 	 *
@@ -36,36 +35,20 @@ public class Log4jPanelAppender extends AppenderSkeleton {
 	 */
 	@Override
 	protected void append( final LoggingEvent event ) {
-		if ( console == null ) {
-			console = LoggingPanel.getInstance();
+		if ( this.logHub == null ) {
+			this.logHub = LoggingPanel.getLoggingHub();
 		}
 
-		if ( console != null ) {
-			String messageHeader = "" + event.getTimeStamp() + " - " + event.getLocationInformation().getClassName() + " - " + event
-					.getLocationInformation()
-					.getLineNumber() + " - ";
+		if ( logHub != null ) {
+			String encodedMessage = "" + event.getTimeStamp() + " - " +
+					event.getLocationInformation().getClassName() + " - " +
+					event.getLocationInformation().getLineNumber() + " - " +
+					event.getRenderedMessage(); // default
 			if (getLayout() != null) {
-				messageHeader = getLayout().format( event );
+				encodedMessage = getLayout().format( event ); // if layout given
 			}
 
-			final String message = event.getRenderedMessage() + "\n";
-
-			console.header( messageHeader );
-			if ( event.getLevel().equals( Level.TRACE ) ) {
-				console.trace( message );
-			}
-			if ( event.getLevel().equals( Level.DEBUG ) ) {
-				console.debug( message );
-			}
-			if ( event.getLevel().equals( Level.INFO ) ) {
-				console.info( message );
-			}
-			if ( event.getLevel().equals( Level.WARN ) ) {
-				console.warn( message );
-			}
-			if ( event.getLevel().equals( Level.ERROR ) ) {
-				console.error( message );
-			}
+			logHub.receive( this.getName(), event, encodedMessage );
 		}
 	}
 }
