@@ -20,7 +20,6 @@ import org.scijava.io.IOService;
 import org.scijava.log.LogService;
 import org.scijava.log.slf4j.SLF4JLogService;
 
-import com.indago.log.Log;
 import com.indago.log.LoggingPanel;
 
 import ij.IJ;
@@ -40,28 +39,42 @@ public class LoggingDemoApp implements ActionListener {
 	 */
 	public static boolean isStandalone = true;
 
-	private static JFrame guiFrame;
+	private static JFrame frameMainLogger;
 	private final JButton btnSysoutTest = new JButton( "sysout something" );
 	private final JButton btnLogTest = new JButton( "log something" );
 
+	private static JFrame frameAppLogger;
+	private final JButton btnSysoutTestApp = new JButton( "sysout something from app" );
+	private final JButton btnLogTestApp = new JButton( "log something from app" );
+
 	public static OpService ops = null;
+	private static SLF4JLogService log;
 
 	public LoggingDemoApp() {
 		btnSysoutTest.addActionListener( this );
 		btnLogTest.addActionListener( this );
+		btnSysoutTestApp.addActionListener( this );
+		btnLogTestApp.addActionListener( this );
 
-		guiFrame = new JFrame( "Logging Demo App" );
-		guiFrame.getContentPane().add( new JScrollPane( LoggingPanel.getInstance() ), BorderLayout.CENTER );
-		guiFrame.getContentPane().add( btnSysoutTest, BorderLayout.NORTH );
-		guiFrame.getContentPane().add( btnLogTest, BorderLayout.SOUTH );
-		setFrameSizeAndCloseOperation();
-		guiFrame.setVisible( true );
+		frameMainLogger = new JFrame( "Main Logging Window" );
+		frameMainLogger.getContentPane().add( new JScrollPane( LoggingPanel.getInstance() ), BorderLayout.CENTER );
+		frameMainLogger.getContentPane().add( btnSysoutTest, BorderLayout.NORTH );
+		frameMainLogger.getContentPane().add( btnLogTest, BorderLayout.SOUTH );
 
-		Log.trace( "started" );
-		Log.debug( "started" );
-		Log.info( "started" );
-		Log.warn( "started" );
-		Log.error( "started" );
+		frameAppLogger = new JFrame( "App Logging Window" );
+		frameAppLogger.getContentPane().add( new JScrollPane( LoggingPanel.getInstance() ), BorderLayout.CENTER );
+		frameAppLogger.getContentPane().add( btnSysoutTestApp, BorderLayout.NORTH );
+		frameAppLogger.getContentPane().add( btnLogTestApp, BorderLayout.SOUTH );
+
+		setFrameSizesAndCloseOperations();
+		frameMainLogger.setVisible( true );
+		frameAppLogger.setVisible( true );
+
+		log.trace( "started" );
+		log.debug( "started" );
+		log.info( "started" );
+		log.warn( "started" );
+		log.error( "started" );
 
 		System.err.println( "stderr without redirecting" );
 		System.out.println( "stdout without redirecting" );
@@ -84,27 +97,26 @@ public class LoggingDemoApp implements ActionListener {
 					IOService.class, LogService.class );
 			ops = context.getService( OpService.class );
 
-			Log.initialize( context.getService( LogService.class ) );
-			Log.info( "STANDALONE" );
+			log = context.getService( SLF4JLogService.class );
+			log.info( "STANDALONE" );
 		} else {
-			Log.initialize( ops.getContext().getService( SLF4JLogService.class ) );
-			Log.info( "PLUGIN" );
+			log = ops.getContext().getService( SLF4JLogService.class );
+			log.info( "PLUGIN" );
 		}
 
 		new LoggingDemoApp();
 	}
 
-	private static void setFrameSizeAndCloseOperation() {
-		guiFrame.setBounds( 100, 100, 600, 800 );
-
-		guiFrame.setDefaultCloseOperation( WindowConstants.DO_NOTHING_ON_CLOSE );
-		guiFrame.addWindowListener( new WindowAdapter() {
+	private static void setFrameSizesAndCloseOperations() {
+		frameMainLogger.setBounds( 100, 100, 600, 800 );
+		frameMainLogger.setDefaultCloseOperation( WindowConstants.DO_NOTHING_ON_CLOSE );
+		frameMainLogger.addWindowListener( new WindowAdapter() {
 
 			@Override
 			public void windowClosing( final WindowEvent we ) {
 				final Object[] options = { "Quit", "Cancel" };
 				final int choice = JOptionPane.showOptionDialog(
-						guiFrame,
+						frameMainLogger,
 						"Do you really want to quit?",
 						"Quit?",
 						JOptionPane.DEFAULT_OPTION,
@@ -117,17 +129,27 @@ public class LoggingDemoApp implements ActionListener {
 				}
 			}
 		} );
+
+		frameAppLogger.setBounds( 800, 100, 800, 400 );
+		frameAppLogger.setDefaultCloseOperation( WindowConstants.DO_NOTHING_ON_CLOSE );
+		frameAppLogger.addWindowListener( new WindowAdapter() {
+
+			@Override
+			public void windowClosing( final WindowEvent we ) {
+					frameAppLogger.dispose();
+			}
+		} );
 	}
 
 	public static void quit( final int exit_value ) {
-		guiFrame.dispose();
+		frameMainLogger.dispose();
 		if ( isStandalone ) {
 			System.exit( exit_value );
 		}
 	}
 
 	public static JFrame getGuiFrame() {
-		return guiFrame;
+		return frameMainLogger;
 	}
 
 	/**
@@ -138,12 +160,21 @@ public class LoggingDemoApp implements ActionListener {
 		if ( e.getSource().equals( btnSysoutTest ) ) {
 			System.err.println( "strerr output" );
 			System.out.println( "stdout output" );
-		} else {
-			Log.trace( "test" );
-			Log.debug( "test" );
-			Log.info( "test" );
-			Log.warn( "test" );
-			Log.error( "test" );
+		} else if ( e.getSource().equals( btnLogTest ) ) {
+			log.trace( "test" );
+			log.debug( "test" );
+			log.info( "test" );
+			log.warn( "test" );
+			log.error( "test" );
+		} else if ( e.getSource().equals( btnSysoutTestApp ) ) {
+			System.err.println( "strerr output of the app" );
+			System.out.println( "stdout output of the app" );
+		} else if ( e.getSource().equals( btnLogTestApp ) ) {
+			log.trace( "test lof of the app" );
+			log.debug( "test lof of the app" );
+			log.info( "test lof of the app" );
+			log.warn( "test lof of the app" );
+			log.error( "test lof of the app" );
 		}
 	}
 }
