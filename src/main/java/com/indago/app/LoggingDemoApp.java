@@ -18,7 +18,6 @@ import javax.swing.WindowConstants;
 import org.scijava.Context;
 import org.scijava.io.IOService;
 import org.scijava.log.LogService;
-import org.scijava.log.slf4j.SLF4JLogService;
 
 import com.indago.log.LoggingPanel;
 
@@ -48,7 +47,7 @@ public class LoggingDemoApp implements ActionListener {
 	private final JButton btnLogTestApp = new JButton( "log something from app" );
 
 	public static OpService ops = null;
-	private static SLF4JLogService log;
+	private static LogService log;
 
 	public LoggingDemoApp() {
 		btnSysoutTest.addActionListener( this );
@@ -97,10 +96,10 @@ public class LoggingDemoApp implements ActionListener {
 					IOService.class, LogService.class );
 			ops = context.getService( OpService.class );
 
-			log = context.getService( SLF4JLogService.class );
+			log = context.getService( LogService.class );
 			log.info( "STANDALONE" );
 		} else {
-			log = ops.getContext().getService( SLF4JLogService.class );
+			log = ops.getContext().getService( LogService.class );
 			log.info( "PLUGIN" );
 		}
 
