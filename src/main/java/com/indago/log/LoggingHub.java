@@ -55,7 +55,13 @@ public class LoggingHub {
 	 * @param name
 	 */
 	public void addAcceptedLoggerToPanel( final LoggingPanel loggingPanel, final String name ) {
-		mapPanelToAcceptedLoggerNames.get( loggingPanel ).add( name );
+		if ( mapPanelToAcceptedLoggerNames.get( loggingPanel ) != null ) {
+			mapPanelToAcceptedLoggerNames.get( loggingPanel ).add( name );
+		} else {
+			final List< String > list = new ArrayList<>();
+			list.add( name );
+			mapPanelToAcceptedLoggerNames.put( loggingPanel, list );
+		}
 	}
 
 	/**
@@ -63,7 +69,9 @@ public class LoggingHub {
 	 * @param name
 	 */
 	public void removeAcceptedLoggerToPanel( final LoggingPanel loggingPanel, final String name ) {
-		mapPanelToAcceptedLoggerNames.get( loggingPanel ).remove( name );
+		if ( mapPanelToAcceptedLoggerNames.get( loggingPanel ) != null ) {
+			mapPanelToAcceptedLoggerNames.get( loggingPanel ).remove( name );
+		}
 	}
 
 	/**
