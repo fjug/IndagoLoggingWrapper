@@ -51,6 +51,46 @@ public class LoggingHub {
 	}
 
 	/**
+	 * @param loggingPanel
+	 * @param name
+	 */
+	public void addAcceptedLoggerToPanel( final LoggingPanel loggingPanel, final String name ) {
+		mapPanelToAcceptedLoggerNames.get( loggingPanel ).add( name );
+	}
+
+	/**
+	 * @param loggingPanel
+	 * @param name
+	 */
+	public void removeAcceptedLoggerToPanel( final LoggingPanel loggingPanel, final String name ) {
+		mapPanelToAcceptedLoggerNames.get( loggingPanel ).remove( name );
+	}
+
+	/**
+	 * @param loggingPanel
+	 * @param appenderName
+	 */
+	public void addAcceptedAppenderToPanel( final LoggingPanel loggingPanel, final String appenderName ) {
+		List< LoggingPanel > logPanels = mapAppenderNameToPanels.get( appenderName );
+		if ( logPanels == null ) {
+			logPanels = new ArrayList<>();
+		}
+		logPanels.add( loggingPanel );
+		mapAppenderNameToPanels.put( appenderName, logPanels );
+	}
+
+	/**
+	 * @param loggingPanel
+	 * @param appenderName
+	 */
+	public void removeAcceptedAppenderToPanel( final LoggingPanel loggingPanel, final String appenderName ) {
+		final List< LoggingPanel > logPanels = mapAppenderNameToPanels.get( appenderName );
+		if ( logPanels == null ) { return; }
+		logPanels.remove( loggingPanel );
+		mapAppenderNameToPanels.put( appenderName, logPanels );
+	}
+
+	/**
 	 * Method receiving <code>logback</code> events from
 	 * <code>LogbackPanelAppender</code>.
 	 *

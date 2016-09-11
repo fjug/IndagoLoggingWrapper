@@ -88,6 +88,24 @@ public class LoggingPanel extends JPanel {
 		}
 	}
 
+	public void addAcceptedLogger( final Logger log ) {
+		if ( log != null )
+			getLoggingHub().addAcceptedLoggerToPanel( this, log.getName() );
+	}
+
+	public void removeAcceptedLogger( final Logger log ) {
+		if ( log != null )
+			getLoggingHub().removeAcceptedLoggerToPanel( this, log.getName() );
+	}
+
+	public void addAcceptedAppender( final String appenderName ) {
+		getLoggingHub().addAcceptedAppenderToPanel( this, appenderName );
+	}
+
+	public void removeAcceptedAppender( final String appenderName ) {
+		getLoggingHub().removeAcceptedAppenderToPanel( this, appenderName );
+	}
+
 	public static LoggingHub getLoggingHub() {
 		if ( logHub == null ) {
 			logHub = new LoggingHub();
