@@ -1,6 +1,6 @@
 import org.scijava.command.Command;
 import org.scijava.command.ContextCommand;
-import org.scijava.log.slf4j.SLF4JLogService;
+import org.scijava.log.LogService;
 import org.scijava.plugin.Parameter;
 import org.scijava.plugin.Plugin;
 
@@ -21,7 +21,7 @@ public class LoggingDemoPlugin implements Command {
 	private OpService opService;
 
 	@Parameter
-	private SLF4JLogService logService;
+	private LogService logService;
 
 	/**
 	 * @see java.lang.Runnable#run()
