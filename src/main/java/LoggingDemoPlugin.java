@@ -14,7 +14,7 @@ import net.imagej.ops.OpService;
  * @author Florian Jug
  */
 
-@Plugin( type = ContextCommand.class, headless = false, menuPath = "Plugin>LoggingDemo" )
+@Plugin( type = ContextCommand.class, headless = false, menuPath = "Plugins>LoggingDemo" )
 public class LoggingDemoPlugin implements Command {
 
 	@Parameter
