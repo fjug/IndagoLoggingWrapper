@@ -134,7 +134,7 @@ public class LogbackPanelAppender< E > extends UnsynchronizedAppenderBase< E > {
 	}
 
 	protected void writeOut( final E event ) throws IOException {
-		this.encoder.doEncode( event );
+		this.encoder.encode( event );
 	}
 
 	/**
@@ -180,12 +180,13 @@ public class LogbackPanelAppender< E > extends UnsynchronizedAppenderBase< E > {
 		return encoder;
 	}
 
-	public void setEncoder( final Encoder< E > encoder ) {
-		this.encoder = encoder;
-		try {
-			encoder.init( sosEncodedMessage );
-		} catch ( final IOException e ) {
-			addStatus( new ErrorStatus( "Encoder initialization failed in appender \"" + name + "\".", this ) );
-		}
-	}
+//  TODO: I just commented this because it causes a compile error, I dont' know how to properly fix it, and it is not used anywhere apparently
+//	public void setEncoder( final Encoder< E > encoder ) {
+//		this.encoder = encoder;
+//		try {
+//			encoder.init( sosEncodedMessage );
+//		} catch ( final IOException e ) {
+//			addStatus( new ErrorStatus( "Encoder initialization failed in appender \"" + name + "\".", this ) );
+//		}
+//	}
 }

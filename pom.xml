@@ -5,13 +5,14 @@
 	<parent>
 		<groupId>sc.fiji</groupId>
 		<artifactId>pom-indago</artifactId>
-		<version>1.0.4-SNAPSHOT</version>
+		<version>2.0.0</version>
 	</parent>
  
  	<properties>
-		<enforcer.skip>true</enforcer.skip>
 		<jung2.version>2.0.1</jung2.version>
 		<scijava.jvm.version>1.8</scijava.jvm.version>
+        <license.licenseName>none</license.licenseName>
+        <license.copyrightOwners>none</license.copyrightOwners>
 	</properties>	
 
 	<groupId>com.indago</groupId>
@@ -22,6 +23,11 @@
 	<description>Logging Wrapper for scijava LogService</description>
 
 	<dependencies>
+		<dependency>
+			<groupId>net.imagej</groupId>
+			<artifactId>ij</artifactId>
+			<!-- TODO: should be test-scope, but this will be superseded by scijava logging anyway? -->
+		</dependency>
 		<dependency>
   			<groupId>org.scijava</groupId>
   			<artifactId>scijava-log-slf4j</artifactId>
@@ -65,4 +71,14 @@
 			<url>http://maven.imagej.net/content/groups/public</url>
 		</repository>
 	</repositories>
+
+    <url>none</url>
+    <inceptionYear>none</inceptionYear>
+    <organization><name>none</name></organization>
+    <licenses><license><name>none</name></license></licenses>
+    <mailingLists><mailingList><name>none</name></mailingList></mailingLists>
+    <scm><tag>none</tag></scm>
+    <issueManagement><system>none</system></issueManagement>
+    <ciManagement><system>none</system></ciManagement>
+    <contributors><contributor><name>none</name></contributor></contributors>
 </project>
