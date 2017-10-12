@@ -33,11 +33,6 @@ public class LoggingHub {
 	private final Map< String, List< LoggingPanel > > mapAppenderNameToPanels = new HashMap<>();
 	private final Map< LoggingPanel, List< String > > mapPanelToAcceptedLoggerNames = new HashMap<>();
 
-	/**
-	 * @param loggingPanel
-	 * @param appenderName
-	 * @param acceptedLogger
-	 */
 	public void registerLogPanel( final LoggingPanel loggingPanel, final String appenderName, final List< String > acceptedLoggerNames ) {
 		List< LoggingPanel > logPanels = mapAppenderNameToPanels.get( appenderName );
 		if ( logPanels == null ) {

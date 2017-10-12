@@ -122,7 +122,7 @@ public class LogbackPanelAppender< E > extends UnsynchronizedAppenderBase< E > {
 	 * <code>OutputStream</code> will be closed when the appender instance is
 	 * closed.
 	 *
-	 * @param logPanel
+	 * @param logHub
 	 *            The LoggingPanel to use.
 	 */
 	public void setLogHub( final LoggingHub logHub ) {
