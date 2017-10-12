@@ -16,7 +16,7 @@
 
 	<groupId>com.indago</groupId>
 	<artifactId>IndagoLoggingWrapper</artifactId>
-	<version>0.1.0-SNAPSHOT</version>
+	<version>0.1.0</version>
 
 	<name>IndagoLoggingWrapper</name>
 	<description>Logging Wrapper for scijava LogService</description>
@@ -66,4 +66,8 @@
 			<url>http://maven.imagej.net/content/groups/public</url>
 		</repository>
 	</repositories>
+
+  <scm>
+    <tag>IndagoLoggingWrapper-0.1.0</tag>
+  </scm>
 </project>
